@@ -1,0 +1,17 @@
+azure-iot-device==2.1.0
+blinker==1.4
+certifi==2019.11.28
+chardet==3.0.4
+idna==2.9
+janus==0.4.0
+paho-mqtt==1.5.0
+peewee==3.13.1
+pkg-resources==0.0.0
+py-context==0.3.1
+PySocks==1.7.1
+requests==2.23.0
+requests-unixsocket==0.2.0
+six==1.14.0
+supervisor==4.1.0
+transitions==0.8.0
+urllib3==1.25.8
