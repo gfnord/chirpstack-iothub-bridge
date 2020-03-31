@@ -11,9 +11,10 @@ import os
 load_dotenv()
 
 # create console handler and set level to debug
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
+consoleHandler = logging.StreamHandler()
+logger.setLevel(logging.DEBUG)
+logger.addHandler(consoleHandler)
 
 # Variables
 IOT_HUB_NAME = os.environ.get('IOT_HUB_NAME', 'default')
@@ -26,13 +27,12 @@ BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD')
 
 # change for your application id in chirpstack
 APPLICATION_ID = os.environ.get('APPLICATION_ID')
-
 MQTT_CLIENT_NAME = os.environ.get('MQTT_CLIENT_NAME', 'bridge')
 
 
 # IOT HUB SDK
 def iothub_client_init():
-    # The device connection string to authenticate the device with your IoT hub.
+    # The device connection string to authenticate the device with your IoT hub
     connection_string = os.environ.get('AZURE_IOT_HUB_CONNECTION_STRING')
     return IoTHubDeviceClient.create_from_connection_string(connection_string)
 
@@ -59,7 +59,7 @@ def on_message(client, userdata, message):
 
     else:
         logger.info('DeviceID : ', json_data.get('devEUI'))
-        obj['APPLICATION_ID'] = application_id
+        obj['APPLICATION_ID'] = APPLICATION_ID
         obj['devEUI'] = json_data['devEUI']
 
         json_data_str = json.dumps(obj)
