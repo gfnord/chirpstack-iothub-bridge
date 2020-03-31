@@ -5,8 +5,10 @@ import json
 import uuid
 import logging
 
+# create console handler and set level to debug
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
-
 
 # Variables
 # The device connection string to authenticate the device with your IoT hub.
