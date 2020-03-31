@@ -3,6 +3,9 @@ from azure.iot.device import IoTHubDeviceClient, Message
 import paho.mqtt.client as mqtt
 import json
 import uuid
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # Variables
@@ -34,8 +37,8 @@ azure_client = iothub_client_init()
 
 # PAHO MQTT CALLBACKS
 def on_message(client, userdata, message):
-    print('Message received: ', message.payload)
-    print('Parsing Payload Json:')
+    logger.info(f'Message received: {message.payload}')
+    logger.info('Parsing Payload JSON...')
 
     # try and parse to Json
     json_data = json.loads(message.payload)
@@ -46,7 +49,7 @@ def on_message(client, userdata, message):
     obj = json_data.get('object')
 
     if not obj:
-        print('Info: Parsed Json did not contain "object"')
+        logging.warning('Parsed JSON did not contain "object".')
 
     else:
         print('DeviceID : ', json_data.get('devEUI'))
