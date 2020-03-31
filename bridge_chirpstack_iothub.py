@@ -58,15 +58,15 @@ def on_message(client, userdata, message):
         print('Object: ', json_data_str)
         print('Azure: sending message...')
 
-        message = Message(json_data_str)
-        message.message_id = uuid.uuid4()
-        message.correlation_id = 'correlation-1234'
+        message_to_azure = Message(json_data_str)
+        message_to_azure.message_id = uuid.uuid4()
+        message_to_azure.correlation_id = 'correlation-1234'
 
         print('Azure:Connecting azure client')
         azure_client.connect()
 
         print('Azure:Connected Azure client. Sending message...')
-        azure_client.send_message(message)
+        azure_client.send_message(message_to_azure)
 
         print('Azure: Message Sent. ')
         azure_client.disconnect()
