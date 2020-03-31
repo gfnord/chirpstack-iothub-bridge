@@ -21,7 +21,7 @@ IOT_HUB_NAME = os.environ.get('IOT_HUB_NAME', 'default')
 
 # Local Chirpstack MQTT
 BROKER_ADDRESS = os.environ.get('BROKER_ADDRESS')
-BROKER_PORT = os.environ.get('BROKER_PORT', 1883)
+BROKER_PORT = int(os.environ.get('BROKER_PORT', 1883))
 BROKER_USER = os.environ.get('BROKER_USER')
 BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD')
 
