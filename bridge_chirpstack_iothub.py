@@ -1,9 +1,14 @@
 from azure.iot.device import IoTHubDeviceClient, Message
+from dotenv import load_dotenv
 
 import paho.mqtt.client as mqtt
 import json
 import uuid
 import logging
+import os
+
+
+load_dotenv()
 
 # create console handler and set level to debug
 ch = logging.StreamHandler()
@@ -11,24 +16,25 @@ ch.setLevel(logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Variables
-# The device connection string to authenticate the device with your IoT hub.
-CONNECTION_STRING = ('HostName=xxx.azure-devices.net;'
-                     'DeviceId=abc123123;'
-                     'SharedAccessKey=...')
-iot_hub_name = 'your_iot_hub_name'
+IOT_HUB_NAME = os.environ.get('IOT_HUB_NAME', 'default')
 
 # Local Chirpstack MQTT
-broker_address = 'localhost'
-broker_port = 1883
-broker_user = 'bridgeuser'
-broker_password = 'bridgepassword'
-application_id = '1'  # change for your application id in chirpstack
+BROKER_ADDRESS = os.environ.get('BROKER_ADDRESS')
+BROKER_PORT = os.environ.get('BROKER_PORT', 1883)
+BROKER_USER = os.environ.get('BROKER_USER')
+BROKER_PASSWORD = os.environ.get('BROKER_PASSWORD')
+
+# change for your application id in chirpstack
+APPLICATION_ID = os.environ.get('APPLICATION_ID')
+
+MQTT_CLIENT_NAME = os.environ.get('MQTT_CLIENT_NAME', 'bridge')
 
 
 # IOT HUB SDK
 def iothub_client_init():
-    # Create an IoT Hub client
-    return IoTHubDeviceClient.create_from_connection_string(CONNECTION_STRING)
+    # The device connection string to authenticate the device with your IoT hub.
+    connection_string = os.environ.get('AZURE_IOT_HUB_CONNECTION_STRING')
+    return IoTHubDeviceClient.create_from_connection_string(connection_string)
 
 
 # Connection to Azure IoT Hub
@@ -53,7 +59,7 @@ def on_message(client, userdata, message):
 
     else:
         logger.info('DeviceID : ', json_data.get('devEUI'))
-        obj['application_id'] = application_id
+        obj['APPLICATION_ID'] = application_id
         obj['devEUI'] = json_data['devEUI']
 
         json_data_str = json.dumps(obj)
@@ -76,14 +82,14 @@ def on_message(client, userdata, message):
 
 
 # Connection to Chirpstack pub/sub broker
-client = mqtt.Client('bridge')  # create new instance
+client = mqtt.Client(MQTT_CLIENT_NAME)  # create new instance
 client.on_message = on_message  # attach function to callback
 
 logger.info('Connecting to pub/sub broker.')
-client.username_pw_set(username=broker_user, password=broker_password)
-client.connect(broker_address, broker_port)  # connect to broker
+client.username_pw_set(username=BROKER_USER, password=BROKER_PASSWORD)
+client.connect(BROKER_ADDRESS, BROKER_PORT)  # connect to broker
 
 logger.info('Broker: Subscribing to device rx topic')
-client.subscribe('application/' + application_id + '/device/+/rx')
+client.subscribe('application/' + APPLICATION_ID + '/device/+/rx')
 
 client.loop_forever()
