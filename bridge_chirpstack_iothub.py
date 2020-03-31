@@ -1,39 +1,35 @@
-import paho.mqtt.client as mqtt
-import time
-import json
-import ssl
-import uuid
-import random
-import time
-import sys
-import asyncio
 from azure.iot.device import IoTHubDeviceClient, Message
+
+import paho.mqtt.client as mqtt
+import json
+
 
 # Variables
 # The device connection string to authenticate the device with your IoT hub.
-CONNECTION_STRING = "HostName=xxx.azure-devices.net;DeviceId=abc123123;SharedAccessKey=..."
+CONNECTION_STRING = ('HostName=xxx.azure-devices.net;'
+                     'DeviceId=abc123123;'
+                     'SharedAccessKey=...')
 iot_hub_name = "your_iot_hub_name"
 
-#Local Chirpstack MQTT
-broker_address="localhost"
-broker_port=1883
-broker_user="bridgeuser"
-broker_password="bridgepassword"
-application_id="1" # change for your application id in chirpstack
+# Local Chirpstack MQTT
+broker_address = 'localhost'
+broker_port = 1883
+broker_user = "bridgeuser"
+broker_password = "bridgepassword"
+application_id = '1'  # change for your application id in chirpstack
 
-#####
-#PAHO MQTT CALLBACKS
-#####
+
+# PAHO MQTT CALLBACKS
 def on_message(client, userdata, message):
     try:
         print("message received: " ,str(message.payload))
         print("Parsing Payload Json:")
-        #try and parse to Json
-        jsonData= json.loads(message.payload)
-        if("object" in jsonData):
+        # try and parse to Json
+        jsonData = json.loads(message.payload)
+        if "object" in jsonData:
             print("DeviceID : ", jsonData["devEUI"])
-            jsonData["object"]["application_id"]=1
-            jsonData["object"]["devEUI"]=jsonData["devEUI"]
+            jsonData["object"]["application_id"] = application_id
+            jsonData["object"]["devEUI"] = jsonData["devEUI"]
             jsonDataString = json.dumps(jsonData["object"])
             print("Object:  : ", jsonData["object"])
             print("Azure: sending message...")
