@@ -22,4 +22,21 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Pipeline successful.'
+        }
+        failure {
+            echo 'Fail.'
+        }
+        unstable {
+            echo 'Unstable.'
+        }
+        changed {
+            echo 'The state of the Pipeline has changed!'
+        }
 }
