@@ -8,6 +8,7 @@ pipeline {
             steps {
                 echo 'Building..'
 		sh 'python --version'
+		sh 'pip freeze'
             }
         }
         stage('Test') {
