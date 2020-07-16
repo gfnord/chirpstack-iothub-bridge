@@ -40,4 +40,5 @@ pipeline {
         changed {
             echo 'The state of the Pipeline has changed!'
         }
+    }
 }
