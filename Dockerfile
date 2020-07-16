@@ -8,7 +8,6 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Run the application:
-#COPY myapp.py .
-#CMD ["python", "myapp.py"]
+# Copy app to image
+COPY bridge_chirpstack_iothub.py .
 

@@ -13,7 +13,8 @@ pipeline {
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo 'Testing.. Compiling script'
+		sh 'python -m py_compile bridge_chirpstack_iothub.py'
             }
         }
         stage('Deploy') {
