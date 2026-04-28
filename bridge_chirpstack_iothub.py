@@ -58,7 +58,7 @@ def on_message(client, userdata, message):
         logging.warning('Parsed JSON did not contain "object".')
 
     else:
-        logger.info('DeviceID : ', json_data.get('devEUI'))
+        logger.info('DeviceID : %s', json_data.get('devEUI'))
         obj['APPLICATION_ID'] = APPLICATION_ID
         obj['devEUI'] = json_data['devEUI']
 
@@ -68,7 +68,9 @@ def on_message(client, userdata, message):
         logger.info('Azure: sending message...')
 
         message_to_azure = Message(json_data_str)
-        message_to_azure.message_id = uuid.uuid4()
+        message_to_azure.message_id = str(uuid.uuid4())
+        message_to_azure.content_encoding = "utf-8"
+        message_to_azure.content_type = "application/json"
         message_to_azure.correlation_id = 'correlation-1234'
 
         logger.info('Azure:Connecting azure client')
@@ -82,7 +84,7 @@ def on_message(client, userdata, message):
 
 
 # Connection to Chirpstack pub/sub broker
-client = mqtt.Client(MQTT_CLIENT_NAME)  # create new instance
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, MQTT_CLIENT_NAME)  # create new instance
 client.on_message = on_message  # attach function to callback
 
 logger.info('Connecting to pub/sub broker.')
